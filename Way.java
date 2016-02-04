@@ -47,9 +47,52 @@ public class Way
 		this.name = null;
 	}
 
+	public static String getTypeName(int type)
+	{
+		if (type == MOTORWAY)
+			return "motorway";
+		else if (type == MOTORWAY_LINK)
+			return "motorway_link";
+		else if (type == TRUNK)
+			return "trunk";
+		else if (type == TRUNK_LINK)
+			return "trunk_link";
+		else if (type == PRIMARY)
+			return "primary";
+		else if (type == PRIMARY_LINK)
+			return "primary_link";
+		else if (type == SECONDARY)
+			return "secondary";
+		else if (type == SECONDARY_LINK)
+			return "secondary_link";
+		else if (type == TERTIARY)
+			return "tertiary";
+		else if (type == TERTIARY_LINK)
+			return "tertiary_link";
+		else if (type == UNCLASSIFIED)
+			return "unclassified";
+		else if (type == UNCLASSIFIED_LINK)
+			return "unclassified_link";
+		else if (type == RESIDENTIAL)
+			return "residential";
+		else if (type == RESIDENTIAL_LINK)
+			return "residential_link";
+		else if (type == SERVICE)
+			return "service";
+		else if (type == SERVICE_LINK)
+			return "service_link";
+		else if (type == LIVING_STREET)
+			return "living_street";
+	}
+
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public String toString()
+	{
+		return ("WAY N " + id + " :\n  speed_limit : " + speed_limit + "\n  oneway : " + oneway + "\n  type : " + getTypeName(type) + "\n  length : " + length + "km\n  name : " + name)
 	}
 
 }

@@ -20,6 +20,14 @@ public class Parse
 		return (res);
 	}
 
+	public static Node jsonToWay(JSONObject json, Hashmap nodes)
+	{
+		Node	res;
+
+		res = new Node(json.getLong("id"), json.getDouble("lat"), json.getDouble("lon"));
+		return (res);
+	}
+
 	public static String readFile(String path, Charset encoding) throws IOException 
 	{
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
@@ -35,6 +43,7 @@ public class Parse
 		try
 		{
 			nodes = new HashMap();
+
 			JSONObject obj = new JSONObject(readFile("paris_data.json", StandardCharsets.UTF_8));
 			JSONArray elts = (JSONArray)obj.get("elements");
 			iter = elts.iterator();
@@ -43,6 +52,13 @@ public class Parse
 				tmp = (JSONObject) iter.next();
 				if (tmp.get("type").equals("node"))
 					System.out.println(jsonToNode(tmp));
+			}
+			iter = elts.iterator();
+			while (iter.hasNext())
+			{
+				tmp = (JSONObject) iter.next();
+				if (tmp.get("type").equals("way"))
+					System.out.println(jsonToWay(tmp, nodes));
 			}
 		}
 		catch (IOException error)

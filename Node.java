@@ -7,6 +7,7 @@ public class Node
 	public double lat;
 	public double lon;
 	public Way[] ways;
+	public ArrayList<Way> tmp_ways;
 
 	public Node(long id, double latitude, double longitude)
 	{
@@ -14,6 +15,7 @@ public class Node
 		this.lat = latitude;
 		this.lon = longitude;
 		ways = null;
+		tmp_ways = null;
 	}
 
 	public String toString()
