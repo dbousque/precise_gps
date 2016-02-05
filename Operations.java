@@ -31,6 +31,8 @@ public class Operations
 		double	length;
 		int		i;
 
+		if (way.nodes.length == 0)
+			return getDistance(way.start, way.end);
 		length = getDistance(way.start, way.nodes[0]);
 		i = 0;
 		while (i < way.nodes.length - 1)

@@ -16,24 +16,25 @@ public class Way
 	public static final int TERTIARY = 9;
 	public static final int TERTIARY_LINK = 10;
 	public static final int UNCLASSIFIED = 11;
-	public static final int UNCLASSIFIED_LINK = 11;
-	public static final int RESIDENTIAL = 12;
-	public static final int RESIDENTIAL_LINK = 13;
-	public static final int SERVICE = 14;
-	public static final int SERVICE_LINK = 15;
-	public static final int LIVING_STREET = 16;
+	public static final int UNCLASSIFIED_LINK = 12;
+	public static final int RESIDENTIAL = 13;
+	public static final int RESIDENTIAL_LINK = 14;
+	public static final int SERVICE = 15;
+	public static final int SERVICE_LINK = 16;
+	public static final int LIVING_STREET = 17;
 
 	public Node start;
 	public Node end;
 	public double length;
 	public Node[] nodes;
 	public int speed_limit;
-	public int id;
+	public long id;
 	public boolean oneway;
 	public int type;
 	public String name;
+	public boolean accessGranted;
 
-	public Way(int id, Node[] nodes, int speed_limit, int type)
+	public Way(long id, Node[] nodes, int speed_limit, int type, boolean oneway, boolean accessGranted)
 	{
 		if (nodes.length < 2)
 			System.out.println("Way " + id + " has too few nodes !");
@@ -44,6 +45,8 @@ public class Way
 		this.nodes = Arrays.copyOfRange(nodes, 1, nodes.length - 1);
 		this.length = Operations.getLengthOfWay(this);
 		this.type = type;
+		this.oneway = oneway;
+		this.accessGranted = accessGranted;
 		this.name = null;
 	}
 
@@ -83,6 +86,8 @@ public class Way
 			return "service_link";
 		else if (type == LIVING_STREET)
 			return "living_street";
+		System.out.println("ERROR");
+		return "ERROR";
 	}
 
 	public void setName(String name)
@@ -92,7 +97,9 @@ public class Way
 
 	public String toString()
 	{
-		return ("WAY N " + id + " :\n  speed_limit : " + speed_limit + "\n  oneway : " + oneway + "\n  type : " + getTypeName(type) + "\n  length : " + length + "km\n  name : " + name)
+		return ("WAY N " + id + " :\n  speed_limit : " + speed_limit +
+			"\n  oneway : " + oneway + "\n  type : " + getTypeName(type) +
+			"\n  length : " + length + "km\n  name : " + name);
 	}
 
 }
