@@ -2,7 +2,7 @@
 
 import java.util.ArrayList;
 
-public class Node
+public class Node implements Comparable<Node>
 {
 
 	public long id;
@@ -38,6 +38,15 @@ public class Node
 			i++;
 		}
 		tmp_ways = null;
+	}
+
+	public int compareTo(Node otherNode)
+	{
+		if (id > otherNode.id)
+			return (1);
+		if (id == otherNode.id)
+			return (0);
+		return (-1);
 	}
 
 	public String toString()

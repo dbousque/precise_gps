@@ -10,6 +10,14 @@ import java.util.Iterator;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+import java.net.URLEncoder;
 
 public class Parse
 {
@@ -252,11 +260,83 @@ public class Parse
 		return (nodes);
 	}
 
+	public static JSONArray getInfoOfAddr(String addr)
+	{
+		String	oriUrl;
+		try
+		{
+			oriUrl = "http://nominatim.openstreetmap.org/search/" + URLEncoder.encode(addr, "UTF-8").replace("+", "%20") + "?format=json";
+		}
+		catch (Exception e)
+		{
+			return (null);
+		}
+		HttpURLConnection connection = null;  
+		try {
+			URL url = new URL(oriUrl);
+			connection = (HttpURLConnection)url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.setDoOutput(true);
+			DataOutputStream wr = new DataOutputStream (connection.getOutputStream());
+			wr.close();
+			InputStream is = connection.getInputStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+			StringBuilder response = new StringBuilder(); // or StringBuffer if not Java 5+ 
+			String line;
+			while((line = rd.readLine()) != null) {
+				response.append(line);
+				response.append('\r');
+			}
+			rd.close();
+			return (new JSONArray(response.toString()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if(connection != null) {
+				connection.disconnect();
+			}
+		}
+	}
+
+	public static Node getPoint(HashMap<Long,Node> nodes)
+	{
+		JSONArray	res;
+		JSONObject	info;
+		String		input;
+		Scanner		read;
+
+		read = new Scanner(System.in);
+		System.out.print("Enter an adress : ");
+		input = read.nextLine();
+		res = (JSONArray)getInfoOfAddr(input);
+		info = (JSONObject)res.get(0);
+		return nodes.get(info.getLong("osm_id"));
+	}
+
 	public static void main(String[] args)
 	{
 		HashMap<Long,Node>	nodes;
+		Node				startPoint;
+		Node				endPoint;
+		BinaryHeap<Node>	tree;
+		int					i;
 
 		nodes = getNodesFromJson("paris_data.json");
+		startPoint = getPoint(nodes);
+		endPoint = getPoint(nodes);
+		tree = new BinaryHeap(BinaryHeap.MAX);
+		i = 0;
+		for (Node tmp : nodes.values())
+		{
+			System.out.println("INPUT : " + tmp.id);
+			tree.add(tmp);
+			i++;
+			if (i > 6)
+				break;
+		}
+		while (!tree.isEmpty())
+			System.out.println(tree.pop().id);
 	}
 
 }
