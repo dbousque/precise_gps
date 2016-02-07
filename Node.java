@@ -42,6 +42,7 @@ public class Node implements Comparable<Node>
 
 	public int compareTo(Node otherNode)
 	{
+		System.out.println("ID : " + id + ", otherID : " + otherNode.id);
 		if (id > otherNode.id)
 			return (1);
 		if (id == otherNode.id)

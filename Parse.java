@@ -335,6 +335,7 @@ public class Parse
 			if (i > 6)
 				break;
 		}
+		tree.print();
 		while (!tree.isEmpty())
 			System.out.println(tree.pop().id);
 	}

@@ -53,6 +53,20 @@ public class BinaryHeap<T extends Comparable<T>>
 		elts = newElts;
 	}
 
+	public void print()
+	{
+		int		i;
+
+		i = 1;
+		System.out.println("START");
+		while (i <= last)
+		{
+			System.out.println(elts[i]);
+			i++;
+		}
+		System.out.println("END");
+	}
+
 	public void add(T newElt)
 	{
 		int		i;
@@ -63,7 +77,7 @@ public class BinaryHeap<T extends Comparable<T>>
 		last++;
 		elts[last] = newElt;
 		i = last;
-		while (i > 1 && ((isMax && elts[i].compareTo(elts[i / 2]) > 0) || elts[i].compareTo(elts[i / 2]) < 0))
+		while (i > 1 && ((isMax && elts[i].compareTo(elts[i / 2]) > 0) || (!isMax && elts[i].compareTo(elts[i / 2]) < 0)))
 		{
 			System.out.println("Swap");
 			tmp = elts[i];
