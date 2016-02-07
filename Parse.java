@@ -319,25 +319,23 @@ public class Parse
 		HashMap<Long,Node>	nodes;
 		Node				startPoint;
 		Node				endPoint;
-		BinaryHeap<Node>	tree;
+		BinaryHeap<SearchNode>	tree;
 		int					i;
 
 		nodes = getNodesFromJson("paris_data.json");
 		startPoint = getPoint(nodes);
 		endPoint = getPoint(nodes);
 		tree = new BinaryHeap(BinaryHeap.MAX);
-		i = 0;
+		/*i = 0;
 		for (Node tmp : nodes.values())
 		{
-			System.out.println("INPUT : " + tmp.id);
 			tree.add(tmp);
 			i++;
-			if (i > 6)
+			if (i > 60)
 				break;
 		}
-		tree.print();
 		while (!tree.isEmpty())
-			System.out.println(tree.pop().id);
+			System.out.println(tree.pop().id);*/
 	}
 
 }

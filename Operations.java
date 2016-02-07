@@ -44,4 +44,26 @@ public class Operations
 		return (length);
 	}
 
+	public static int getActualSpeed(Way way)
+	{
+		return (way.speed_limit - 5);
+	}
+
+	public static double getTimeCostOfNode(Node node)
+	{
+		return (10.0);
+	}
+
+	public static double getTimeCostOfEndNode(Way way, boolean takeReverse)
+	{
+		if (takeReverse)
+			return (way.startNodeTime);
+		return (way.endNodeTime);
+	}
+
+	public static double getTimeToTravelWay(Way way)
+	{
+		return (way.length / way.actual_speed * 60.0 * 60.0);
+	}
+
 }

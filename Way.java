@@ -26,8 +26,12 @@ public class Way
 	public Node start;
 	public Node end;
 	public double length;
+	public double time;
+	public double startNodeTime;
+	public double endNodeTime;
 	public Node[] nodes;
 	public int speed_limit;
+	public int actual_speed;
 	public long id;
 	public boolean oneway;
 	public int type;
@@ -48,6 +52,10 @@ public class Way
 		this.oneway = oneway;
 		this.accessGranted = accessGranted;
 		this.name = null;
+		this.actual_speed = Operations.getActualSpeed(this);
+		this.time = Operations.getTimeToTravelWay(this);
+		this.startNodeTime = Operations.getTimeCostOfNode(start);
+		this.endNodeTime = Operations.getTimeCostOfNode(end);
 	}
 
 	public static String getTypeName(int type)
