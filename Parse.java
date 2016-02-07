@@ -156,9 +156,9 @@ public class Parse
 				else
 					tmp_way = new Way(json.getLong("id"), Arrays.copyOfRange(way_nodes, start, i + 1),
 																	speed_limit, type, oneway, accessGranted);
-				start = i;
 				way_nodes[start].addNewWay(tmp_way);
 				way_nodes[i].addNewWay(tmp_way);
+				start = i;
 			}
 			else if (i == len - 1)
 				System.out.println("ERROR, node is not intersect but should be");
@@ -299,6 +299,26 @@ public class Parse
 		}
 	}
 
+	public static Node findClosestNode(HashMap<Long,Node> nodes, double lat, double lon)
+	{
+		double 		closestScore;
+		double		tmpScore;
+		Node		closest;
+
+		closest = null;
+		closestScore = 0.0;
+		for (Node node : nodes.values())
+		{
+			tmpScore = Operations.getDistanceLatLon(lat, lon, node.lat, node.lon);
+			if (node.is_intersect && (closest == null || tmpScore < closestScore))
+			{
+				closestScore = tmpScore;
+				closest = node;
+			}
+		}
+		return (closest);
+	}
+
 	public static Node getPoint(HashMap<Long,Node> nodes)
 	{
 		JSONArray	res;
@@ -311,7 +331,57 @@ public class Parse
 		input = read.nextLine();
 		res = (JSONArray)getInfoOfAddr(input);
 		info = (JSONObject)res.get(0);
-		return nodes.get(info.getLong("osm_id"));
+		return (findClosestNode(nodes, info.getDouble("lat"), info.getDouble("lon")));
+	}
+
+	public static String secondsToTime(double seconds)
+	{
+		double 		time;
+		int			hours;
+
+		time = seconds;
+		hours = (int)(time / 60 / 60);
+		time -= (hours * 60 * 60);
+		if ((int)(time / 60) < 10)
+			return ("" + hours + "h0" + (int)(time / 60));
+		return ("" + hours + "h" + (int)(time / 60));
+	}
+
+	public static void printBestWay(SearchNode node)
+	{
+		System.out.println("Best way found !");
+		System.out.println("Length : " + node.length + " km");
+		System.out.println("Time   : " + secondsToTime(node.time));
+	}
+
+	public static Node getCurrentLastNode(SearchNode node)
+	{
+		if (node.takeReverses[node.takeReverses.length - 1])
+			return (node.ways[node.ways.length - 1].start);
+		else
+			return (node.ways[node.ways.length - 1].end);
+	}
+
+	public static boolean endOfSearch(SearchNode node, Node endPoint)
+	{
+		Node	currentLastNode;
+
+		currentLastNode = getCurrentLastNode(node);
+		if (currentLastNode == endPoint)
+			return (true);
+		return (false);
+	}
+
+	public static void addInitalNodesToTree(BinaryHeap<SearchNode> tree, Node startPoint, Node endPoint)
+	{
+		int		i;
+
+		i = 0;
+		while (i < startPoint.ways.length)
+		{
+			tree.add(new SearchNode(null, startPoint.ways[i], !startPoint.isAtStart[i], endPoint));
+			i++;
+		}
 	}
 
 	public static void main(String[] args)
@@ -321,15 +391,40 @@ public class Parse
 		Node					endPoint;
 		BinaryHeap<SearchNode>	tree;
 		SearchNode				topNode;
+		Node					currentLastNode;
 
 		nodes = getNodesFromJson("paris_data.json");
 		startPoint = getPoint(nodes);
 		endPoint = getPoint(nodes);
-		tree = new BinaryHeap(BinaryHeap.MIN);
-		tree.add(new SearchNode(null, null, false, null));
-		while (!tree.isEmpty())
+		System.out.println(startPoint);
+		System.out.println(endPoint);
+		if (startPoint == endPoint)
 		{
-			topNode = tree.pop();
+			printBestWay(new SearchNode(null, null, false, null));
+		}
+		else
+		{
+			tree = new BinaryHeap(BinaryHeap.MIN);
+			addInitalNodesToTree(tree, startPoint, endPoint);
+			while (!tree.isEmpty())
+			{
+				topNode = tree.pop();
+				if (endOfSearch(topNode, endPoint))
+				{
+					printBestWay(topNode);
+					break;
+				}
+				currentLastNode = getCurrentLastNode(topNode);
+				for (int i = 0; i < currentLastNode.ways.length; i++)
+				{
+					if (!currentLastNode.ways[i].alreadyTaken)
+					{
+						tree.add(new SearchNode(topNode, currentLastNode.ways[i], !currentLastNode.isAtStart[i], endPoint));
+						currentLastNode.ways[i].alreadyTaken = true;
+					}
+				}
+			}
+			System.out.println("Tree empty");
 		}
 	}
 
