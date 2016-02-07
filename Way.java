@@ -37,6 +37,7 @@ public class Way
 	public int type;
 	public String name;
 	public boolean accessGranted;
+	public boolean alreadyTaken;
 
 	public Way(long id, Node[] nodes, int speed_limit, int type, boolean oneway, boolean accessGranted)
 	{
@@ -56,6 +57,7 @@ public class Way
 		this.time = Operations.getTimeToTravelWay(this);
 		this.startNodeTime = Operations.getTimeCostOfNode(start);
 		this.endNodeTime = Operations.getTimeCostOfNode(end);
+		this.alreadyTaken = false;
 	}
 
 	public static String getTypeName(int type)
