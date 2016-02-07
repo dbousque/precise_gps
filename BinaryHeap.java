@@ -53,6 +53,13 @@ public class BinaryHeap<T extends Comparable<T>>
 		elts = newElts;
 	}
 
+	public T getTop()
+	{
+		if (last < 1)
+			return (null);
+		return (elts[1]);
+	}
+
 	public void add(T newElt)
 	{
 		int		i;

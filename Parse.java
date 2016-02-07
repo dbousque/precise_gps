@@ -117,7 +117,7 @@ public class Parse
 		return (false);
 	}
 
-	public static void handleWay(JSONObject json, HashMap nodes)
+	public static void handleWay(JSONObject json, HashMap nodes, ArrayList<Way> ways)
 	{
 		Node[]		way_nodes;
 		int			len;
@@ -158,6 +158,7 @@ public class Parse
 																	speed_limit, type, oneway, accessGranted);
 				way_nodes[start].addNewWay(tmp_way);
 				way_nodes[i].addNewWay(tmp_way);
+				ways.add(tmp_way);
 				start = i;
 			}
 			else if (i == len - 1)
@@ -203,6 +204,8 @@ public class Parse
 		JSONObject			tmp;
 		JSONArray			way_nodes;
 		int					i;
+		int					len;
+		Node				tmpNode;
 
 		while (iter.hasNext())
 		{
@@ -210,17 +213,28 @@ public class Parse
 			if (tmp.get("type").equals("way"))
 			{
 				way_nodes = (JSONArray) tmp.get("nodes");
+				len = way_nodes.length();
 				nodes.get(way_nodes.getLong(0)).is_intersect = true;
-				nodes.get(way_nodes.getLong(way_nodes.length() - 1)).is_intersect = true;
+				nodes.get(way_nodes.getLong(len - 1)).is_intersect = true;
+				i = 1;
+				while (i < len - 1)
+				{
+					tmpNode = nodes.get(way_nodes.get(i));
+					if (tmpNode != null)
+						tmpNode.is_intersect = true;
+					i++;
+				}
 			}
 		}
 	}
 
 	public static void readWays(Iterator<Object> iter, HashMap<Long,Node> nodes)
 	{
-		JSONObject	tmp;
-		int			count;
+		JSONObject		tmp;
+		int				count;
+		ArrayList<Way>	ways;
 
+		ways = new ArrayList();
 		count = 0;
 		while (iter.hasNext())
 		{
@@ -228,9 +242,10 @@ public class Parse
 			if (tmp.get("type").equals("way"))
 			{
 				count++;
-				handleWay(tmp, nodes);
+				handleWay(tmp, nodes, ways);
 			}
 		}
+		Shapefile.saveWaysToFile(ways);
 	}
 
 	public static void validateWaysInNodes(HashMap<Long,Node> nodes)
@@ -319,17 +334,12 @@ public class Parse
 		return (closest);
 	}
 
-	public static Node getPoint(HashMap<Long,Node> nodes)
+	public static Node getPoint(HashMap<Long,Node> nodes, String place)
 	{
 		JSONArray	res;
 		JSONObject	info;
-		String		input;
-		Scanner		read;
 
-		read = new Scanner(System.in);
-		System.out.print("Enter an adress : ");
-		input = read.nextLine();
-		res = (JSONArray)getInfoOfAddr(input);
+		res = (JSONArray)getInfoOfAddr(place);
 		info = (JSONObject)res.get(0);
 		return (findClosestNode(nodes, info.getDouble("lat"), info.getDouble("lon")));
 	}
@@ -347,11 +357,12 @@ public class Parse
 		return ("" + hours + "h" + (int)(time / 60));
 	}
 
-	public static void printBestWay(SearchNode node)
+	public static void printBestWay(SearchNode node, double startTime, String start, String end)
 	{
-		System.out.println("Best way found !");
+		System.out.println("Best way found in " + ((System.currentTimeMillis() - startTime) / 1000) + " seconds !");
 		System.out.println("Length : " + node.length + " km");
 		System.out.println("Time   : " + secondsToTime(node.time));
+		Shapefile.saveWayToFile(node, start, end);
 	}
 
 	public static Node getCurrentLastNode(SearchNode node)
@@ -392,16 +403,24 @@ public class Parse
 		BinaryHeap<SearchNode>	tree;
 		SearchNode				topNode;
 		Node					currentLastNode;
+		double					startTime;
+		String					start;
+		String					end;
+		Scanner					read;
 
 		nodes = getNodesFromJson("paris_data.json");
-		startPoint = getPoint(nodes);
-		endPoint = getPoint(nodes);
+		read = new Scanner(System.in);
+		System.out.print("Enter a start adress : ");
+		start = read.nextLine();
+		System.out.print("Enter an end adress : ");
+		end = read.nextLine();
+		startPoint = getPoint(nodes, start);
+		endPoint = getPoint(nodes, end);
 		System.out.println(startPoint);
 		System.out.println(endPoint);
+		startTime = System.currentTimeMillis();
 		if (startPoint == endPoint)
-		{
-			printBestWay(new SearchNode(null, null, false, null));
-		}
+			printBestWay(new SearchNode(null, null, false, null), startTime, start, end);
 		else
 		{
 			tree = new BinaryHeap(BinaryHeap.MIN);
@@ -409,22 +428,22 @@ public class Parse
 			while (!tree.isEmpty())
 			{
 				topNode = tree.pop();
+				topNode.ways[topNode.ways.length - 1].alreadyTaken = true;
 				if (endOfSearch(topNode, endPoint))
 				{
-					printBestWay(topNode);
+					printBestWay(topNode, startTime, start, end);
 					break;
 				}
 				currentLastNode = getCurrentLastNode(topNode);
 				for (int i = 0; i < currentLastNode.ways.length; i++)
 				{
-					if (!currentLastNode.ways[i].alreadyTaken)
+					if (!currentLastNode.ways[i].alreadyTaken && currentLastNode.ways[i].accessGranted && (!currentLastNode.ways[i].oneway || currentLastNode.isAtStart[i]))
 					{
 						tree.add(new SearchNode(topNode, currentLastNode.ways[i], !currentLastNode.isAtStart[i], endPoint));
-						currentLastNode.ways[i].alreadyTaken = true;
+						//currentLastNode.ways[i].alreadyTaken = true;
 					}
 				}
 			}
-			System.out.println("Tree empty");
 		}
 	}
 
