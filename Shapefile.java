@@ -50,6 +50,7 @@ public class Shapefile
 		try
 		{
 			writer = new PrintWriter("./shapefiles/" + start.replace(" ", "_") + "_" + end.replace(" ", "_") + ".ways", "ASCII");
+			System.out.println("Best way saved to " + "shapefiles/" + start.replace(" ", "_") + "_" + end.replace(" ", "_") + ".ways");
 		}
 		catch (Exception e)
 		{

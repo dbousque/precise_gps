@@ -423,17 +423,17 @@ public class Parse
 		String					end;
 		Scanner					read;
 
-		nodes = getNodesFromJson("france_simple.json");//"nantes_limoges.json");//"poitiers_angouleme.json");//"paris_data.json");
+		nodes = getNodesFromJson("paris_data.json");
 		read = new Scanner(System.in);
 		System.out.print("Enter a start adress : ");
 		start = read.nextLine();
 		System.out.print("Enter an end adress : ");
 		end = read.nextLine();
+		System.out.println("Searching start and end point coordinates...");
 		startPoint = getPoint(nodes, start);
 		endPoint = getPoint(nodes, end);
-		System.out.println(startPoint);
-		System.out.println(endPoint);
 		startTime = System.currentTimeMillis();
+		System.out.println("\nStarted search...");
 		if (startPoint == endPoint)
 			printBestWay(new SearchNode(null, null, false, null), startTime, start, end);
 		else
