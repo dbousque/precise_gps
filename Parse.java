@@ -219,7 +219,7 @@ public class Parse
 				i = 1;
 				while (i < len - 1)
 				{
-					tmpNode = nodes.get(way_nodes.get(i));
+					tmpNode = nodes.get(way_nodes.getLong(i));
 					if (tmpNode != null)
 						tmpNode.is_intersect = true;
 					i++;
