@@ -25,6 +25,21 @@ BEST QUERY :
 </osm-script>
 
 
+NANTES-LIMOGES : 
+
+<osm-script output="json" timeout="90">
+  <union>
+    <query type="way">
+      <has-kv k="highway" regv="motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|unclassified_link|residential|residential_link|service|service_link|living_street"/>
+      <bbox-query e="1.579823" w="-1.784084" n="47.577015" s="45.627418"/>
+    </query>
+  </union>
+  <!-- print results -->
+  <print mode="body"/>
+  <recurse type="down"/>
+  <print mode="skeleton" order="quadtile"/>
+</osm-script>
+
 
 Query for overpass-turbo:
 <osm-script output="json" timeout="90">
