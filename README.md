@@ -3,9 +3,9 @@ GPS path finding based on data from OpenStreetMap.
 
 Solarized dark             |  Solarized Ocean
 :-------------------------:|:-------------------------:
-![](http://s10.postimg.org/xy3drbj0n/Screenshot_from_2016_02_14_23_50_46.png)  |  ![](http://s14.postimg.org/c71fgznb5/test1.png)
+![](http://s14.postimg.org/uj19pmapr/google.png)  |  ![](http://s14.postimg.org/c71fgznb5/test1.png)
 
-![alt-text-1](http://s10.postimg.org/xy3drbj0n/Screenshot_from_2016_02_14_23_50_46.png "title-1")
+![alt-text-1](http://s14.postimg.org/uj19pmapr/google.png "title-1")
 ![alt-text-2](http://s14.postimg.org/c71fgznb5/test1.png "title-2")
 
 Best path searching for cars. The algorithm is based around a priority queue, from which search nodes are popped in the order defined by the cost function (in Priority.java), currently based on the length of the path.
