@@ -24,6 +24,20 @@ BEST QUERY :
   <print mode="skeleton" order="quadtile"/>
 </osm-script>
 
+TOUTE FRANCE :
+
+<osm-script output="json" timeout="90">
+  <union>
+    <query type="way">
+      <has-kv k="highway" regv="motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|unclassified_link|residential|residential_link|service|service_link|living_street"/>
+      <bbox-query e="8.297352" w="-4.908836" n="51.443333" s="42.092404"/>
+    </query>
+  </union>
+  <!-- print results -->
+  <print mode="body"/>
+  <recurse type="down"/>
+  <print mode="skeleton" order="quadtile"/>
+</osm-script>
 
 NANTES-LIMOGES : 
 

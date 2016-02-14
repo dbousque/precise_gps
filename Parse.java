@@ -42,13 +42,23 @@ public class Parse
 		return (50);
 	}
 
+	public static boolean onlyDigits(String str)
+	{
+		for (int i = 0; i < str.length(); i++)
+		{
+			if (!Character.isDigit(str.charAt(i)))
+				return (false);
+		}
+		return (true);
+	}
+
 	public static int getSpeedLimit(String maxspeed, int type)
 	{
 		int		speed;
 		boolean	urban;
 
 		urban = true;
-		if (maxspeed == null)
+		if (maxspeed == null || !onlyDigits(maxspeed))
 			speed = getSpeedForTypeNCountry(type, COUNTRY_FRANCE, urban);
 		else
 			speed = Integer.parseInt(maxspeed);
@@ -139,6 +149,8 @@ public class Parse
 		tags = (JSONObject) json.get("tags");
 		accessGranted = getAccess(tags.isNull("access") ? null : tags.getString("access"));
 		type = getType(tags.getString("highway"));
+		if (type == 0)
+			return ;
 		speed_limit = getSpeedLimit(tags.isNull("maxspeed") ? null : tags.getString("maxspeed"), type);
 		oneway = isOneway(tags.isNull("oneway") ? null : tags.getString("oneway"));
 		while (i < len)
@@ -159,6 +171,8 @@ public class Parse
 				way_nodes[start].addNewWay(tmp_way);
 				way_nodes[i].addNewWay(tmp_way);
 				ways.add(tmp_way);
+				if (Double.isNaN(tmp_way.length))
+					tmp_way.length = Double.MIN_VALUE;
 				start = i;
 			}
 			else if (i == len - 1)
@@ -271,6 +285,7 @@ public class Parse
 		}
 		getIntersectNodes(elts.iterator(), nodes);
 		readWays(elts.iterator(), nodes);
+		elts = null;
 		validateWaysInNodes(nodes);
 		return (nodes);
 	}
@@ -408,7 +423,7 @@ public class Parse
 		String					end;
 		Scanner					read;
 
-		nodes = getNodesFromJson("paris_data.json");
+		nodes = getNodesFromJson("france_simple.json");//"nantes_limoges.json");//"poitiers_angouleme.json");//"paris_data.json");
 		read = new Scanner(System.in);
 		System.out.print("Enter a start adress : ");
 		start = read.nextLine();
@@ -428,6 +443,11 @@ public class Parse
 			while (!tree.isEmpty())
 			{
 				topNode = tree.pop();
+				if (Double.isNaN(topNode.length))
+				{
+					System.out.println(topNode.ways.length);
+					return ;
+				}
 				topNode.ways[topNode.ways.length - 1].alreadyTaken = true;
 				if (endOfSearch(topNode, endPoint))
 				{

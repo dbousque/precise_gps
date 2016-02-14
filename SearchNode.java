@@ -37,6 +37,12 @@ public class SearchNode implements Comparable<SearchNode>
 			ways = copyWay(currentNode.ways, newWay);
 			takeReverses = copyReverses(currentNode.takeReverses, takeReverse);
 			length = currentNode.length + newWay.length;
+			if (Double.isNaN(length))
+			{
+				System.out.println("LOL");
+				System.out.println(currentNode.length);
+				System.out.println(newWay.length);
+			}
 			time = currentNode.time + newWay.time + Operations.getTimeCostOfEndNode(newWay, takeReverse);
 			priority = Priority.getPriority(this, endPoint, takeReverse);
 		}
