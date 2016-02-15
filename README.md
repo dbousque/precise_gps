@@ -1,11 +1,11 @@
 # precise_gps
 GPS path finding based on data from OpenStreetMap.
 
-!(http://s14.postimg.org/c71fgznb5/test1.png "title-2")
+![lol](http://s14.postimg.org/c71fgznb5/test1.png "title-2")
 
 Best path searching for cars. The algorithm is based around a priority queue, from which search nodes are popped in the order defined by the cost function (in Priority.java), currently based on the length of the path.
 A map from Paris is provided as a example, so you can run tests with adresses in Paris.
-!(http://s14.postimg.org/uj19pmapr/google.png "title-1")
+![big](http://s14.postimg.org/uj19pmapr/google.png "title-1")
 Private roads are not taken, and oneway roads directions are respected.
 
 The program outputs .ways files, descripting the best way found. You can convert those .ways file to shapefiles using the python script like so :
