@@ -23,5 +23,5 @@ Then :
 javac *.java
 java Parse
 ```
-You can open the shapefiles in QGIS (http://www.qgis.org/en/site/) on OpenJump for example.
+You can open the shapefiles in QGIS (http://www.qgis.org/en/site/) or OpenJump for example.
 The algorithm is working really well but I currently have trouble seeing how I could scale (finding paths on a whole continent) with very few memory. With full details (absolutely all roads crossable by cars from OpenStreeMap), you can load up to a 150km\*150km map into 4GB of memory, but that's not really satisfactory. With 128 GB, I guess you could load Western Europe. I am eager to find out what kind of techniques could be used to reduce the amount of memory used, while remaining fast (maybe loading 50km*50km subsets while searching ?), so if you have ideas about that, I'd be happy to ear them.
