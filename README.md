@@ -2,10 +2,10 @@
 GPS path finding based on data from OpenStreetMap.
 
 ![lol](test1.png "title-2")
+![big](google.png "title-1")
 
 Best path searching for cars. The algorithm is based around a priority queue, from which search nodes are popped in the order defined by the cost function (in Priority.java), currently based on the length of the path.
 A map from Paris is provided as a example, so you can run tests with adresses in Paris.
-![big](google.png "title-1")
 Private roads are not taken, and oneway roads directions are respected.
 
 The program outputs .ways files, descripting the best way found. You can convert those .ways file to shapefiles using the python script like so :
