@@ -1,5 +1,5 @@
 # precise_gps
-GPS path finding based on data from OpenStreetMap.
+Navigation system based on data from OpenStreetMap.
 
 ![lol](test1.png "title-2")
 ![big](google.png "title-1")
